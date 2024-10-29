@@ -5,6 +5,9 @@
 */
 
 
+const gameContainer = document.getElementById('game-board');
+
+
 // These are all the symbols that the game is going to use
 const symbols = ['🍎', '🍌', '🍇', '🍓', '🍍', '🍉', '🍒', '🥝'];
 // You're going to need this to display the cards on the screen (remember there should be two of each card)
@@ -23,7 +26,16 @@ let lockBoard = false;
 */
 function initGame() {
     // Write your code here
-
+    cards = []
+    gameContainer.innerHTML = ""
+    for (let sym of symbols) {
+       createCard(sym)
+       createCard(sym)
+    }
+    shuffleArray(cards)
+    for (let card of cards) {
+        gameContainer.appendChild(card)
+    }
     document.getElementById('restart-btn').addEventListener('click', initGame);
 }
 
@@ -34,6 +46,15 @@ function initGame() {
 */
 function createCard(symbol) {
     // Write your code here
+    let card = document.createElement('div')
+    card.classList.add('card')
+    card.symbol = symbol
+    // gameContainer.appendChild(card)
+    card.addEventListener('click', ()=> {
+        flipCard(card)
+    })
+    cards.push(card)
+    return card
 }
 
 /*
@@ -48,6 +69,15 @@ function flipCard(card) {
     // If the board is supposed to be locked or you picked the same card you already picked
     if (lockBoard || card === firstCard) return;
     // Write your code here
+
+    card.classList.add('flipped')
+    card.innerText = card.symbol
+    if(firstCard == null) {
+        firstCard = card
+    } else {
+        secondCard = card
+        checkForMatch()
+    }
 }
 
 /* 
@@ -57,6 +87,13 @@ function flipCard(card) {
 */
 function checkForMatch() {
     // Write your code here
+    if(firstCard.symbol === secondCard.symbol) {
+        disableCards()
+    }
+    else {
+        unflipCards()
+    }
+
 }
 
 /* 
@@ -66,7 +103,16 @@ function checkForMatch() {
 */
 function disableCards() {
     // Write your code here
+    firstCard.classList.add('matched')
+    secondCard.classList.add('matched')
+    resetBoard()
 }
+
+
+
+
+
+
  
 /* ---------------------  Everything under has already been done for you -------------------------- */
 
